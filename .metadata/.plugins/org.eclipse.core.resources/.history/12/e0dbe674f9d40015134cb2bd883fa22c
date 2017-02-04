@@ -1,0 +1,53 @@
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Hero extends Character {
+	public Hero(String n, String q, Point start){
+		super(n, q, 10, 1, 0);
+		location = start;
+	}
+	public ArrayList<Item> getItems(){
+		return items;
+	}
+	public boolean pickUpItem(Item i){
+		if(items.size() > 5){
+			return true;
+		}else return false;
+	}
+	public void removeItem(Item i){
+		
+	}
+	public void removeItem(int index){ //REMOVES ITEM FROM THE ITEM ARRAYLIST
+		items.remove(index);
+	}
+	public Point getLocation(){
+		return location;
+	}
+	public void setLocation(Point P){
+		
+	}
+	public char goNorth(Level l){
+		return level[(int) getLocation().getX()+1][(int) getLocation().getY()];
+	}
+	public char goSouth(Level l){
+		return 0;
+	}
+	public char goEast(Level l){
+		return 0;
+	}
+	public char goWest(Level l){
+		return 0;
+	}
+	@Override
+	public void attack(Character c) {
+		Random rand = new Random();
+		int randomNum;
+		
+		randomNum = rand.nextInt((3 - 1) + 1) + 1;
+		c.takeDamage(randomNum);
+	}
+	
+	private Point location;
+	private ArrayList<Item> items = new ArrayList<Item>();
+}

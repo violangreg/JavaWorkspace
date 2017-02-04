@@ -1,0 +1,13 @@
+import javax.swing.JFrame;
+
+public class Frame extends JFrame {
+	private Panel panel;
+	public Frame(){
+		setBounds(100, 100, 450, 300); // x, y, w, h of window
+		panel = new Panel(); // TODO not sure about this
+		getContentPane().add(panel);
+	}
+	public static void main(String[] args){
+		// TODO 
+	}
+}

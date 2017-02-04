@@ -1,0 +1,22 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+
+public class QuarryGenerator {
+	ArrayList<Quarry> quarry;
+	public QuarryGenerator(){
+		quarry = new ArrayList<Quarry>(); // TODO not finished
+	}
+	public Quarry generateQuarry(){
+		File f = new File("QuarryList.txt");
+		try{
+			Scanner scnr = new Scanner(f);
+		}catch(FileNotFoundException e){
+			System.out.println("FNFE");
+		}
+		
+		
+		Quarry quarry = new Quarry()
+		return null; // TODO
+	}
+}

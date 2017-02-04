@@ -1,0 +1,23 @@
+import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Frame extends JFrame {
+	private Panel panel;
+	public Frame(){
+		setBounds(100, 100, 450, 300); // x, y, w, h of window
+		panel = new Panel(); // TODO not sure about this
+		getContentPane().add(panel);
+		
+		Thread t = new Thread(panel);
+	}
+	public static void main(String[] args){
+		Frame f = new Frame();
+		f.setTitle("Oregon Trail Hunter (ver. Greg V)");
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setVisible(true);
+		
+		// TODO 
+	}
+}

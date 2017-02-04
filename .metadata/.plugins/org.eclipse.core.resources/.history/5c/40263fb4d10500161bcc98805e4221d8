@@ -1,0 +1,65 @@
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+
+public class Obstacle extends Entity{
+	private int type;
+	private BufferedImage image;
+	public Obstacle(Point p, int t, BufferedImage i){
+		super(p, 50, 50, 1, 1, 1); // TODO NO IDEA WHAT OBSTACLE IS LOL
+		type = t;
+		image = i;
+		
+	}
+	public boolean testCollision(Entity e){
+		Rectangle r = new Rectangle((int) getLocation().getX(), (int) getLocation().getY(), getWidth(), getHeight());
+		
+		// TOP LEFT
+		Point p1 = new Point((int) e.getLocation().getX(), (int) e.getLocation().getY());
+		//System.out.println(p1);
+		
+		
+		// TOP RIGHT
+		Point p2 = new Point((int) e.getLocation().getX() + e.getWidth(), (int) e.getLocation().getY());
+		//System.out.println(p2);
+		
+		// BOTTOM RIGHT
+		Point p3 = new Point((int) e.getLocation().getX() + e.getWidth(), (int) e.getLocation().getY() + e.getHeight());
+		//System.out.println(p3);
+		
+		// BOTTOM LEFT
+		Point p4 = new Point((int) e.getLocation().getX(), (int) e.getLocation().getY() + e.getHeight());
+		//System.out.println(p4);
+		
+		boolean collide = false;
+		if(r.contains(p1)){
+			collide = true;
+			System.out.println("contains1");
+			System.out.println(getLocation());
+		}
+		if(r.contains(p2)){
+			collide = true;
+			System.out.println("contains2");
+		}
+		if(r.contains(p3)){
+			collide = true;
+			System.out.println("contains3");
+		}
+		if(r.contains(p4)){
+			collide = true;
+			System.out.println("contains4");
+		}
+		
+		return collide;
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		
+		//g.drawImage(image, (int)p.getX(), (int)p.getY(), null);
+		//g.fillRect((int), y, width, height);
+		g.drawRect((int)p.getX(), (int)p.getY(), w, h);
+		
+		
+	}
+}

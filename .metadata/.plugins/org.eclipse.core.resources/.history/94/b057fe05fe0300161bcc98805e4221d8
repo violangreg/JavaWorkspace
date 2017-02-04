@@ -1,0 +1,106 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Random;
+
+public class Hunter extends Entity{
+	private Bullet bullet;
+	private LinkedList<Bullet> bulletList;
+	private final int OFF_SET = 7;
+	
+	public Hunter(Point p, int w, int h, int hp, int sp){
+		super(p, w, h, hp, sp, 1); // TODO not too sure what direction here again @_@
+		bulletList = new LinkedList<Bullet>();
+		
+		// set hunter at a random position
+		Point randPos = randomPosition();
+		setLocation(randPos.x, randPos.y);
+	}
+	public void fireBullet(){
+		bullet = new Bullet(this.getLocation(), 3, 3, 1, 5, getDirection());
+		bullet.setLocation(this.getLocation().x + OFF_SET - 2, this.getLocation().y + OFF_SET + 2);
+		System.out.println(bullet.getLocation());
+		bulletList.add(bullet);
+		
+		
+		// TODO
+	}
+	
+	public boolean testHit(Entity e){
+		boolean hit;
+		for(int i = 0; i < bulletList.size(); i++){
+			if(bullet.getBounds().contains(e.getBounds())){
+				return hit;
+			}
+		}
+		return hit;// TODO
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		// test templates
+		w = 15;
+		h = 15;
+		
+		// update bullet (if fired)
+		if(!bulletList.isEmpty()){
+			for(int i = 0; i < bulletList.size(); i++){
+				bulletList.get(i).toggleMoving();
+				bulletList.get(i).update(g);
+			}
+		}
+		
+		// max x = 676 ,  max y = 353
+		// delete bullet when it goes out of bounce of the screen
+		for(int i = 0; i < bulletList.size(); i++){
+			Point bulletLoc = bulletList.get(i).getLocation();
+			if(bulletLoc.x > 676 || bulletLoc.y > 353){
+				bulletList.remove(i);
+			}
+			if(bulletLoc.x < 0 || bulletLoc.y < 0){
+				bulletList.remove(i);
+			}
+		}
+		
+		// template to render the hunter
+		g.setColor(Color.WHITE);
+		g.fillOval((int) p.getX(), (int) p.getY(), w, h);
+		
+		g.setColor(Color.GREEN);
+		switch(dir){
+		case 1:
+			// north
+			g.drawLine((int) p.getX() + OFF_SET, (int) p.getY() + OFF_SET, (int) p.getX() + OFF_SET, (int) p.getY() - 15);
+			break;
+		case 2:
+			// north-east
+			g.drawLine((int) p.getX() + OFF_SET, (int) p.getY() + OFF_SET, (int) p.getX() + 20, (int) p.getY() - 5);
+			break;
+		case 3:
+			// east
+			g.drawLine((int) p.getX() + OFF_SET, (int) p.getY() + OFF_SET, (int) p.getX() + 25, (int) p.getY() + OFF_SET);
+			break;
+		case 4:
+			// south-east
+			g.drawLine((int) p.getX() + OFF_SET, (int) p.getY() + OFF_SET, (int) p.getX() + 20, (int) p.getY() + 20);
+			break;
+		case 5:
+			// south
+			g.drawLine((int) p.getX() + OFF_SET, (int) p.getY() + OFF_SET, (int) p.getX() + OFF_SET, (int) p.getY() + 25);
+			break;
+		case 6:
+			// south-west
+			g.drawLine((int) p.getX() + OFF_SET, (int) p.getY() + OFF_SET, (int) p.getX() - 5, (int) p.getY() + 20);
+			break;
+		case 7:
+			// west
+			g.drawLine((int) p.getX() + OFF_SET, (int) p.getY() + OFF_SET, (int) p.getX() - 15, (int) p.getY() + OFF_SET);
+			break;
+		case 8:
+			// north-west
+			g.drawLine((int) p.getX() + OFF_SET, (int) p.getY() + OFF_SET, (int) p.getX() - 10, (int) p.getY() - 10);
+			break;
+		}
+	}
+}

@@ -1,0 +1,18 @@
+import java.awt.Graphics;
+import java.awt.Point;
+
+public class Obstacle extends Entity{
+	private int type;
+	public Obstacle(Point p, int t){
+		
+		type = t;
+	}
+	public testCollision(Entity e){
+		
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		// TODO Auto-generated method stub
+		
+	}
+}

@@ -1,0 +1,30 @@
+import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+public class Frame extends JFrame {
+	private Panel panel;
+	public Frame(){
+		//For screen size
+		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		int width = (int) screenSize.getWidth();
+		int height = (int) screenSize.getHeight();
+		
+		setBounds(width/4, height/4, width/2, height/2); // x, y, w, h of window
+		panel = new Panel(); // TODO not sure about this
+		Thread t = new Thread(panel); // creates a thread of panel
+		getContentPane().add(panel);
+		
+		setTitle("Oregon Trail Hunter (ver. Greg V)");
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setVisible(true);
+		setResizable(false);
+		t.start(); // starts thread panel (objects should be able to start running [moving])
+	}
+	public static void main(String[] args){
+		Frame f = new Frame();
+	
+		// TODO 
+	}
+}

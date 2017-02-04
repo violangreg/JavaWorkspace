@@ -1,0 +1,23 @@
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
+
+public class Panel extends JPanel implements Runnable{
+	private Hunter hunter;
+	private QuarryGenerator qGen;
+	ArrayList<Obstacle> obstacles;
+	ArrayList<Quarry> quarries;
+	public Panel(){
+		hunter = new Hunter(new Point(5,5), 1, 1, 1, 1); // TODO this is just a template
+		qGen = new QuarryGenerator();
+		obstacles = new ArrayList<Obstacle>();
+		quarries = new ArrayList<Quarry>();
+	}
+	public void testCollisions(){
+		
+	}
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+	}
+	
+}

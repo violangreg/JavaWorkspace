@@ -1,0 +1,437 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
+
+import javax.imageio.ImageIO;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+
+@SuppressWarnings("serial")
+public class Panel extends JPanel implements KeyListener, MouseListener, MouseMotionListener, Runnable{
+
+	// TODO
+	// WORK ON NOT HAVING OVERLAPPING OBSTACLES AND HUNTER DOESNT OVERLAP WITH OBSTACLES AND QUARRIES DONT OVERLAP WITH OBSTACLES
+	// QUARRIES NOT SPAWNING ON OBSTACLES (can be done by spawning obstacles away from where quarries spawn)
+	// QUARRIES SHOULD DISAPPEAR AFTER a couple seconds
+	//???? HAVE DIFFERENT TYPE OBSTACLES WITH WIDTH AND HEIGHT + DIFF HEIGHT IMAGES ????/
+	// ADD GUN SOUND, HUNTER GETTING HIT + BACKGROUND MUSIC
+	// ADD IMAGE DIRECTION
+	// ???? IMPLEMENT SHOOTING DELAY ?????
+	// FIX BUGS ( SUCH AS THE QUARRY GETTING STUCK IN HUNTER )
+	
+	private Hunter hunter;
+	private QuarryGenerator qGen;
+	private ArrayList<Obstacle> obstacles;
+	private ArrayList<Quarry> quarries;
+	
+	private BufferedImage background, controls;
+	private Timer timer;
+	private final int TIMER = 60;
+	private int quarryCount = 0;
+	private boolean startGame = false;
+	private Clip bgmClip;
+
+	// WINDOW SIZE FOR QUARRIES HITTING THE EDGE
+	private final int WIDTH_OFF_SET = 415;
+	private final int HEIGHT_OFF_SET = 185;
+	
+	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	private final int screenWidth = (int) screenSize.getWidth() - WIDTH_OFF_SET;
+	private final int screenHeight = (int) screenSize.getHeight() - HEIGHT_OFF_SET;
+	
+	// ---- INSTANTIATING OBJECTS ONCE GO HERE ----- //
+	public Panel(){
+		Random r = new Random();
+		
+		// CREATING HUNTER, GENERATOR, ARRAYLISTS
+		this.setBackground(Color.BLACK);
+		Point hunterPoint = new Point(r.nextInt(screenWidth - 50) + 20, 
+				r.nextInt(screenHeight - 50) + 20);
+		hunter = new Hunter(hunterPoint, 40, 40, 3, 3); 
+		
+		qGen = new QuarryGenerator();
+		obstacles = new ArrayList<Obstacle>();
+		quarries = new ArrayList<Quarry>();
+		timer = new Timer(TIMER, quarryCount, 500, 45);
+		
+		try{
+			bgmClip = AudioSystem.getClip();
+			bgmClip.open(AudioSystem.getAudioInputStream(new File("bgm.wav")));
+			bgmClip.start();
+		}catch(LineUnavailableException e){
+			System.out.println("Audio Error");
+		}catch(IOException e){
+			System.out.println("FNFE");
+		}catch(UnsupportedAudioFileException e){
+			System.out.println("WFT");
+		}
+		
+		// ADDING LISTENERS
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		addKeyListener(this);
+		setFocusable(true);
+		
+		// ADDING BACKGROUND IMAGE
+		try {
+			background = ImageIO.read(new File("background.png"));
+			controls = ImageIO.read(new File("controls.png"));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// CREATING OBSTACLES
+		for(int i = 0; i < r.nextInt(7) + 2; i++)
+		{
+			Point obsTempPoint = new Point(r.nextInt(screenWidth - 100) + 50,
+					r.nextInt(screenHeight - 100 ) + 50);
+			Rectangle rBounds = new Rectangle((int) obsTempPoint.getX(),
+					(int) obsTempPoint.getY(), 50, 50);
+			int type = r.nextInt(2) + 1; // TODO TEMPLATE NEED TO CHANGE
+			Obstacle obsTemp = new Obstacle(obsTempPoint, type);
+			obstacles.add(obsTemp);
+			
+			for(int j = 0; j < obstacles.size(); j++)
+			{
+				if(rBounds.intersects(obstacles.get(i).getBounds()))
+				{
+					obstacles.remove(obsTemp);
+					obsTemp = new Obstacle(obsTempPoint, type);
+					obstacles.add(obsTemp);
+				}
+			}
+		}
+		
+	}
+	
+	//---------- ALL COLLISION TESTS GO HERE ----------- //
+	public void testCollisions()
+	{
+		// HUNTER AND OBSTACLE COLLISION
+		for(int i = 0; i < obstacles.size(); i++)
+		{
+			if(obstacles.get(i).testCollision(hunter))
+			{
+				for(int j = 0; j < 4; j++)
+				{
+					hunter.spinCW();
+				}
+				
+				hunter.stopMoving();
+				hunter.move();
+			}
+			
+		}
+
+		// QUARRY AND OBSTACLE COLLISION
+		for(int i = 0; i < obstacles.size(); i++)
+		{
+			for(int j = 0; j < quarries.size(); j++)
+			{
+				if(obstacles.get(i).testCollision(quarries.get(j)))
+				{
+					for(int k = 0; k < 4; k++)
+					{
+						quarries.get(j).spinCW();
+					}
+					
+					quarries.get(j).move();
+				}
+			}
+		}
+		
+		// QYARRY AND HUNTER COLLISION
+		for (int i = 0; i < quarries.size(); i++)
+		{
+			if (quarries.get(i).testCollision(hunter)) 
+			{
+				for (int k = 0; k < 4; k++)
+				{
+					quarries.get(i).spinCW();
+				}
+				quarries.get(i).move();
+				
+				for(int j = 0; j < 4; j++)
+				{
+					hunter.spinCCW();
+				}
+				
+				hunter.stopMoving();
+				hunter.move();
+			}
+		}
+	
+		// TOGGLE TO MOVE THE QUARRIES
+		if(!quarries.isEmpty()){
+			for(int i = 0; i < quarries.size(); i++){			
+				quarries.get(i).toggleMoving();
+	
+				Point quarryLoc = quarries.get(i).getLocation();
+				
+				// IF QUARRIES HIT A WALL, REMOVE EM
+				if((int) quarryLoc.getX() > screenWidth || (int) quarryLoc.getY() > screenHeight){
+					quarries.remove(i);
+				}
+				if((int) quarryLoc.getX() < 0 || (int) quarryLoc.getY() < 0){
+					quarries.remove(i);
+				}
+			
+			}
+		}
+		
+		// HUNTER'S BULLET HITTING QUARRIES
+		if (!quarries.isEmpty()) 
+		{
+			for (int i = 0; i < quarries.size(); i++) 
+			{
+				if (hunter.testHit(quarries.get(i))) // SEE IF HUNTER's, // BULLETS ARE HITTING A, // QUARRY
+				{ 
+					quarries.get(i).takeHit(); // QUARRY TAKES DAMAGE
+					if (quarries.get(i).isDead())  // IF QUARRIES DIES
+					{
+						Obstacle obsQuarry = null;
+						int type = 0;
+						if (quarries.get(i).getWeight() < 25) {
+							type = 3;
+						} else if (quarries.get(i).getWeight() < 100) {
+							type = 4;
+						} else if (quarries.get(i).getWeight() < 250) {
+							type = 5;
+						}
+
+						obsQuarry = new Obstacle(quarries.get(i).getLocation(), type);
+						
+						obstacles.add(obsQuarry);
+						timer.incQuarryCount();
+						quarryCount = timer.getQuarryCount();
+						
+						quarries.remove(i); // REMOVE QUARRY
+					}
+				}
+			}
+		}
+		
+		// HUNTER'S BULLET HITTING OBSTACLES
+		if(!obstacles.isEmpty())
+		{
+			for(int i = 0; i < obstacles.size(); i++)
+			{
+				if(hunter.testHit(obstacles.get(i)))
+				{
+					// DON'T DO ANYTHING IF OBSTACLE IS HIT
+				}
+			}
+		}
+		
+	}
+	
+	// --------- UPDATE / RENDERING / REDRAWING OBJECTS GO HERE -------------- //
+	public void paintComponent(Graphics g)
+	{
+		super.paintComponent(g);
+		//background
+		g.drawImage(background, 0, 0, this);
+		
+		// update hunter
+		hunter.update(g);
+		
+		// update quarries
+		if(!quarries.isEmpty())
+		{
+			for(int i = 0; i < quarries.size(); i++)
+			{
+				quarries.get(i).update(g);
+			}
+		}
+		
+		// update obstacles
+		if(!obstacles.isEmpty())
+		{
+			for(int i = 0; i < obstacles.size(); i++)
+			{
+				obstacles.get(i).update(g);
+			}
+		}
+		
+		// TIMER
+		timer.paintComponent(g);
+		if(startGame == false)
+		{
+			g.drawImage(controls, 0, 0, this);
+		}
+		
+	}
+	 	
+	//----------- MOUSE AND KEY CONTROLS -----------
+	@Override
+	public void mouseDragged(MouseEvent e) {}
+	@Override
+	public void mouseMoved(MouseEvent e)
+	{
+		// Variables
+		Point position = new Point(e.getPoint());
+		double xHunter = hunter.getLocation().getX() + (hunter.getWidth()/2);
+		double yHunter = hunter.getLocation().getY() + (hunter.getHeight()/2);
+		double horizontal, vertical, hypotenuse, angle;
+		
+		// Calculate angle
+		horizontal = position.getX() - xHunter;
+		if(position.getY() < yHunter)
+		{
+			vertical = Math.abs(position.getY() - yHunter);
+		}
+		else
+		{
+			vertical = -Math.abs(position.getY() - yHunter);
+		}
+		
+		hypotenuse = Math.sqrt(Math.pow(vertical, 2) + Math.pow(horizontal, 2));
+		angle = Math.toDegrees(Math.asin(vertical/hypotenuse));
+		
+		if(angle > 60)
+		{
+			hunter.setDirection(1);
+		}
+		else if(angle > 30 && angle <= 60 && position.getX() > xHunter)
+		{
+			hunter.setDirection(2);
+		}
+		else if((angle > -30 && angle <= 30) && position.getX() > xHunter)
+		{
+			hunter.setDirection(3);
+		}
+		else if(angle < -30 && angle >= -60 && position.getX() > xHunter)
+		{
+			hunter.setDirection(4);
+		}
+		else if(angle < -60){
+			hunter.setDirection(5);
+		}
+		else if(angle < -30 && angle >= -60 && position.getX() < xHunter)
+		{
+			hunter.setDirection(6);
+		}
+		else if(angle >= -30 && angle <= 30 && position.getX() < xHunter)
+		{
+			hunter.setDirection(7);
+		}
+		else
+		{
+			hunter.setDirection(8);
+		}
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) 
+	{
+		hunter.fireBullet();
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e) {}
+	@Override
+	public void mouseReleased(MouseEvent e) {}
+	@Override
+	public void keyPressed(KeyEvent e) 
+	{
+		// Special keys
+		// Moves the hunter
+		if(e.getKeyCode() == KeyEvent.VK_ENTER)
+		{
+			hunter.toggleMoving();
+		}
+		// Hunter shoots
+		if(e.getKeyCode() == KeyEvent.VK_SPACE)
+		{
+			hunter.fireBullet();
+			play("blip.wav");
+		}
+		if(e.getKeyCode() == KeyEvent.VK_LEFT)
+		{
+			hunter.spinCCW();
+		}
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT)
+		{
+			hunter.spinCW();
+		}
+		if(e.getKeyCode() == KeyEvent.VK_S)
+		{
+			Thread t = new Thread(timer);
+			t.start();
+			startGame = true;
+		}
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {}
+	@Override
+	public void keyTyped(KeyEvent e) {}
+	
+	//----------- SOUNDS + MUSIC ----------------//
+	public void play(String filename)
+	{
+		try{
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(new File(filename)));
+			clip.start();
+		}catch(LineUnavailableException e){
+			System.out.println("Audio Error");
+		}catch(IOException e){
+			System.out.println("FNFE");
+		}catch(UnsupportedAudioFileException e){
+			System.out.println("WFT");
+		}
+	}
+		
+	// ---------- RUN CONTINOUSLY ---------- //
+	@Override
+	public void run() 
+	{
+		while(true)
+		{	
+			Random r = new Random();
+			if(r.nextInt(80) == 1)
+			{
+				quarries.add(qGen.generateQuarry());
+			}
+			
+			//obstacle/quarries and bullet collision?
+			testCollisions();
+			
+			if(timer.time() < 0)
+			{
+				bgmClip.stop();
+				play("gameOver.wav");
+				JOptionPane.showMessageDialog(this, "GAME OVER \nSCORE:  " + Integer.toString(quarryCount));
+				System.exit(0);
+			}
+			
+			repaint();
+			try
+			{
+				Thread.sleep(16);
+			}catch(InterruptedException e){}
+		}
+		
+	}
+	
+}

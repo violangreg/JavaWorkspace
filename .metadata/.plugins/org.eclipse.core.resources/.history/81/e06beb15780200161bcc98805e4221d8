@@ -1,0 +1,110 @@
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+
+public abstract class Entity {
+	private Rectangle location;
+	private int HP, speed, direction;
+	private boolean moving;
+	public Entity(Point p, int w, int h, int hp, int sp, int dir){
+		location = new Rectangle(w, h);
+		location.add(p);
+		HP = hp;
+		speed = sp;
+		direction = dir;
+	}
+	public Point getLocation(){
+		return location.getLocation();
+	}
+	public int getWidth(){
+		return location.width;
+	}
+	public int getHeight(){
+		return location.height;
+	}
+	public int getHp(){
+		return HP;
+	}
+	public int getSpeed(){
+		return speed;
+	}
+	public int getDirection(){
+		return direction;
+	}
+	public boolean getMove(){
+		return moving;
+	}
+	public boolean isDead(){
+		if(HP <= 0) return true;
+		else return false;
+	}
+	public void takeHit(){
+		
+	}
+	public void spinCW(){
+		if(direction == 8){
+			direction = 1;
+		}
+		else{
+			++direction;
+		}
+	}
+	public void spinCCW(){
+		if(direction == 1){
+			direction = 8;
+		}
+		else{
+			--direction;
+		}
+	}
+	public void setDirection(int d){
+		direction = d;
+	}
+	public void toggleMoving(){
+		if(moving == true){
+			moving = false;
+		}
+		else{
+			moving = true;
+		}
+		moving = true;
+	}
+	public void stopMoving(){
+		moving = false;
+	}
+	public void update(){
+		if(moving == true){
+			location.x += getDirection() + getSpeed();
+			location.y += getDirection() + getSpeed();
+		}
+	}
+	public void move(){
+		switch(direction){
+		case 1: // north 
+			location.translate(0, -1); // y - is up, x is the same
+			break;
+		case 2: // north-east
+			location.translate(1, -1); // y + is down
+			break;
+		case 3: // east
+			location.translate(1, 0);
+			break;
+		case 4: // south-east
+			location.translate(1, 1);
+			break;
+		case 5: // south
+			location.translate(0, 1);
+			break;
+		case 6: // south-west
+			location.translate(-1, 1);
+			break;
+		case 7: // west
+			location.translate(-1, 0);
+			break;
+		case 8: // north-west
+			location.translate(-1, -1);
+			break;
+		}
+	}
+	public abstract void draw(Graphics g, Point p, int w, int h, int dir);
+}

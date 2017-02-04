@@ -1,0 +1,66 @@
+import java.awt.Point;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class Level {
+	public Level(){
+		
+		try{
+			Scanner read = new Scanner(new File("Level1.txt"));
+			//ADD ALL ROOMS FROM Level1.txt to itemList Array
+			do{
+				int i = 0;
+				
+				read.useDelimiter(" ");
+				String line = read.nextLine();
+				String[] tokens = line.split(" ");
+				
+				//System.out.println(Arrays.deepToString(tokens));
+				
+				char chars = tokens[3].charAt(3);
+				
+				level = new char[4][4];
+				
+				for(int ii = 0; ii < level.length; ++ii){
+					for (int jj = 0; jj < level.length; ++jj){
+						level[ii][jj] = chars;
+					}
+				}
+				
+				
+			}while(read.hasNext());
+			read.close();
+			}catch(FileNotFoundException fnf){
+				System.out.println("FNF");
+			}
+		
+		
+		
+		System.out.println(Arrays.deepToString(level));
+		
+//		for(int ii = 0; ii < level.length; ++ii){
+//			for (int jj = 0; jj < level.length; ++jj){
+//				System.out.printf("%-5s", level[ii][jj]);
+//			}
+//		}	
+//		
+	//	System.out.print(String.format("%-2s", level[2][0]));
+		
+		
+	}
+	public void generateLevel(int levelNum){
+		
+	}
+	public char getRoom(Point p){
+		return 0;
+	}
+	public void displayMap(Point p){
+		
+	}
+	public Point findStartLocation(){
+		return null;
+	}
+	private char[][] level;
+}

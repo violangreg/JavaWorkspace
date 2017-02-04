@@ -1,0 +1,27 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class Project2 {
+
+	public static void main(String[] args) 
+	{
+		EnemyGenerator enemyGen = new EnemyGenerator();
+		
+		
+		//TESTING ENEMY GENERATOR
+//		for(int i = 0; i <= 10; ++i){
+//		enemyGen.generateEnemy(3);
+//		}
+		ItemGenerator itemGen = new ItemGenerator();
+		
+		//TESTING ITEM GENERATOR
+//		for(int i = 0; i <= 10; ++i){
+//		itemGen.generateItem();
+//		}
+		
+		
+		
+	}
+
+}

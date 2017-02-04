@@ -1,0 +1,10 @@
+
+public class Frame {
+	private Panel panel;
+	public Frame(){
+		
+	}
+	static void main(String[] args){
+		
+	}
+}

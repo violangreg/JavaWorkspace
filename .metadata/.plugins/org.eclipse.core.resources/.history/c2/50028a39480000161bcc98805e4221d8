@@ -1,0 +1,10 @@
+
+public class Quarry extends Entity {
+	private int weight;
+	private String name;
+	public Quarry(Point p, int w, int h, int hp, int sp, String n, int wt){
+		super(p, w, h, hp, sp, 1);
+		name = n;
+		weight = wt;
+	}
+}

@@ -1,0 +1,71 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.ArrayList;
+import java.util.Random;
+
+public class Hunter extends Entity{
+	private ArrayList<Bullet> b;
+	private Bullet bullet;
+	
+	public Hunter(Point p, int w, int h, int hp, int sp){
+		super(p, w, h, hp, sp, 1); // TODO not too sure what direction here again @_@
+	}
+	public void fireBullet(){
+		bullet = new Bullet(this.getLocation(), 3, 3, 1, 1, this.getDirection());
+		// TODO
+	}
+	public boolean testHit(Entity e){
+		return true; // TODO
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		// test templates
+		w = 10;
+		h = 10;
+		
+		// random position
+		Random rand = new Random();
+		int x1 = rand.nextInt(100) + 1;
+		
+		
+		// template to render the hunter
+		g.setColor(Color.WHITE);
+		g.fillOval((int) p.getX() + 50, (int) p.getY() + 50, w, h);
+		
+		switch(dir){
+		case 1:
+			// north
+			g.drawLine((int) p.getX() + 55, (int) p.getY() + 55, (int) p.getX() + 55, (int) p.getY() + 40);
+			break;
+		case 2:
+			// north-east
+			g.drawLine((int) p.getX() + 55, (int) p.getY() + 55, (int) p.getX() + 65, (int) p.getY() + 45);
+			break;
+		case 3:
+			// east
+			g.drawLine((int) p.getX() + 55, (int) p.getY() + 55, (int) p.getX() + 70, (int) p.getY() + 55);
+			break;
+		case 4:
+			// south-east
+			g.drawLine((int) p.getX() + 55, (int) p.getY() + 55, (int) p.getX() + 65, (int) p.getY() + 65);
+			break;
+		case 5:
+			// south
+			g.drawLine((int) p.getX() + 55, (int) p.getY() + 55, (int) p.getX() + 55, (int) p.getY() + 70);
+			break;
+		case 6:
+			// south-west
+			g.drawLine((int) p.getX() + 55, (int) p.getY() + 55, (int) p.getX() + 45, (int) p.getY() + 65);
+			break;
+		case 7:
+			// west
+			g.drawLine((int) p.getX() + 55, (int) p.getY() + 55, (int) p.getX() + 40, (int) p.getY() + 55);
+			break;
+		case 8:
+			// north-west
+			g.drawLine((int) p.getX() + 55, (int) p.getY() + 55, (int) p.getX() + 45, (int) p.getY() + 45);
+			break;
+		}
+	}
+}

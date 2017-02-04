@@ -1,0 +1,29 @@
+import java.awt.image.BufferedImage;
+
+public class fps {
+
+    private BufferedImage fps;
+    private int duration;
+
+    public fps(BufferedImage fps, int duration) {
+        this.fps = fps;
+        this.duration = duration;
+    }
+
+    public BufferedImage getfps() {
+        return fps;
+    }
+
+    public void setfps(BufferedImage fps) {
+        this.fps = fps;
+    }
+
+    public int getDuration() {
+        return duration;
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+    }
+
+}

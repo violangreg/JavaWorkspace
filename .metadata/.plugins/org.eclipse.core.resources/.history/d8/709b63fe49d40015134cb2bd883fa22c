@@ -1,0 +1,66 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.Scanner;
+
+public class EnemyGenerator {
+	public EnemyGenerator(){
+		Item test = new Item("Test", 5);
+		
+		try{
+		Scanner read = new Scanner(new File("EnemyList.txt"));
+		//ADD ALL ENEMIES FROM EnemeyList.txt to enemyList Array
+		do{
+			read.useDelimiter(",");
+			String line = read.nextLine();
+			String[] tokens = line.split(",");
+			
+			//TEST                  //NAME     //QUIP      //HP                     //LV //G //ITEM
+			Enemy enemy = new Enemy(tokens[0], tokens[1], Integer.parseInt(tokens[2]), 1, 5, test);
+			enemyList.add(enemy);
+		}while(read.hasNext());
+		read.close();
+		}catch(FileNotFoundException fnf){
+			System.out.println("FNF");
+		}
+		
+		//SHOW ENEMYLIST ARRAY //TEST
+		for(int ii = 0; ii < enemyList.size(); ++ii){
+			System.out.println(String.format("%-2s %-10s %-1s %-10s %-5s %-5s %-5s %s %s %s ", ii, enemyList.get(ii).getName() , " " , enemyList.get(ii).getQuip() , " HP: " , enemyList.get(ii).getHp() , " LV: " , enemyList.get(ii).getLevel() , " Gold: " , enemyList.get(ii).getGold() , " Item: " ,enemyList.get(ii).getItem().getName() ));
+		}
+	}
+	public Enemy generateEnemy(int level){
+		Enemy enemy = null;
+		
+		//LEVEL 1 MOBS : SNAKE, GIANT RAT, FROGLOK
+		if(level == 1){
+			Random rand = new Random();
+			int randomMob = rand.nextInt((3 - 1) + 1) + 1;
+			
+			if(randomMob == 1) randomMob = 5; //5: SNAKE, 1 HP
+			else if(randomMob == 2) randomMob = 2; //2: GIANT RAT, 2 HP
+			else randomMob = 6; //6: FROGLOK, 3 HP
+			
+			//TP: GENERATE RANDOM LEVEL 1 MONSTER
+			System.out.println("RandomMob#:" + randomMob);
+			
+			//GENERATES A RANDOM MONSTER
+			enemy = new Enemy(enemyList.get(randomMob).getName(), enemyList.get(randomMob).getQuip(), enemyList.get(randomMob).getHp() , enemyList.get(randomMob).getLevel() , enemyList.get(randomMob).getGold(), enemyList.get(randomMob).getItem());
+			
+			//TP: CHECK MONSTER
+			System.out.println(enemy.getName());
+		}
+		//LEVEL 2 MOBS : GNOLL, GOBLIN, ORC
+		else if(level == 2){
+			Random rand = new Random();
+			int randomMob = rand.nextInt((3 - 1) + 1) + 1;
+			
+			if(randomMob == 1) randomMob = 4; //4: GNOLL, 4 HP
+			else if(randomMob == 2) randomMob = 0; //5: GOBLIN, 5 HP
+			else randomMob = 1; //6: ORC, 6 HP
+		}
+		
+		return enemy;
+	}
+	private ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
+}

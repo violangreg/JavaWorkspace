@@ -1,0 +1,14 @@
+import java.awt.Point;
+import java.awt.Rectangle;
+
+public abstract class Entity {
+	private Rectangle location;
+	private int hp, speed, direction;
+	private boolean moving;
+	public Entity(Point p, int width, int height, int h, int sp, int dir){
+		new Point(p);
+		speed = sp;
+		hp = h;
+		
+	}
+}

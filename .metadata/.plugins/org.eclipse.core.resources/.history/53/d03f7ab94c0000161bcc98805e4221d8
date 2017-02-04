@@ -1,0 +1,12 @@
+import java.util.ArrayList;
+
+public class Panel {
+	private Hunter hunter;
+	private QuarryGenerator qGen;
+	ArrayList<Obstacle> obstacles;
+	ArrayList<Quarry> quarries;
+	public Panel(){
+		hunter = new Hunter(new Point(5,5), )
+	}
+	
+}

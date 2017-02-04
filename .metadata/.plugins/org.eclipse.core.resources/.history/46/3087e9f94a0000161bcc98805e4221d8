@@ -1,0 +1,20 @@
+import java.awt.Graphics;
+import java.awt.Point;
+
+public class Hunter extends Entity{
+	private Bullet bullet;
+	public Hunter(Point p, int w, int h, int hp, int sp){
+		super(p, w, h, hp, sp, getDirection());
+	}
+	public void fireBullet(){
+		// TODO
+	}
+	public boolean testHit(Entity e){
+		return true; // TODO
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		// TODO Auto-generated method stub
+		
+	}
+}

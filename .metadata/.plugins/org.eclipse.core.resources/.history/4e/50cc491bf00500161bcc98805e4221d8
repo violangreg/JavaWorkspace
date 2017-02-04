@@ -1,0 +1,60 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class Bullet extends Entity{
+	private BufferedImage image;
+	public Bullet(Point p, int w, int h, int hp, int sp, int dir){
+		super(p, w, h, hp, sp, dir);
+		try {
+			image = ImageIO.read(new File("bullet2.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public boolean testCollision(Entity e){	
+		Rectangle r = new Rectangle((int) getLocation().getX(), (int) getLocation().getY(), getWidth(), getHeight());
+		
+		// TOP LEFT
+		Point p1 = new Point((int) e.getLocation().getX(), (int) e.getLocation().getY());
+		
+		// TOP RIGHT
+		Point p2 = new Point((int) e.getLocation().getX() + e.getWidth(), (int) e.getLocation().getY());
+		
+		// BOTTOM RIGHT
+		Point p3 = new Point((int) e.getLocation().getX() + e.getWidth(), (int) e.getLocation().getY() + e.getHeight());
+		
+		// BOTTOM LEFT
+		Point p4 = new Point((int) e.getLocation().getX(), (int) e.getLocation().getY() + e.getHeight());
+
+		boolean collide = false;
+		if(r.contains(p1)){
+			collide = true;
+		}
+		if(r.contains(p2)){
+			collide = true;
+		}
+		if(r.contains(p3)){
+			collide = true;
+		}
+		if(r.contains(p4)){
+			collide = true;
+		}
+		
+		return collide;
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		//g.setColor(Color.YELLOW);
+		//g.fillOval((int)p.getX() , (int)p.getY(), 10, 10);
+		g.drawImage(image, (int)p.getX() , (int)p.getY(), null);
+		// TODO Auto-generated method stub
+	}
+}

@@ -1,0 +1,284 @@
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Random;
+
+import javax.imageio.ImageIO;
+import javax.swing.JPanel;
+
+public class Panel extends JPanel implements KeyListener, MouseListener, MouseMotionListener, Runnable{
+	private Hunter hunter;
+	private QuarryGenerator qGen;
+	private ArrayList<Obstacle> obstacles;
+	private ArrayList<Quarry> quarries;
+	
+	private BufferedImage background;
+	private ArrayList<BufferedImage> images;
+	private final int imageSize = 6;
+	
+	// WINDOW SIZE FOR QUARRIES HITTING THE EDGE
+	private final int WIDTH_OFF_SET = 405;
+	private final int HEIGHT_OFF_SET = 175;
+	
+	private Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	private int screenWidth = (int) screenSize.getWidth() - WIDTH_OFF_SET;
+	private int screenHeight = (int) screenSize.getHeight() - HEIGHT_OFF_SET;
+	
+	// INSTANTIATING OBJECTS ONCE GO HERE
+	public Panel(){
+		Random r = new Random();
+		// CREATING HUNTER, GENERATOR, ARRAYLISTS
+		this.setBackground(Color.BLACK);
+		Point hunterPoint = new Point(r.nextInt(screenWidth), 
+				r.nextInt(screenHeight));
+		hunter = new Hunter(hunterPoint, 15, 15, 3, 3); 
+		
+		qGen = new QuarryGenerator();
+		obstacles = new ArrayList<Obstacle>();
+		quarries = new ArrayList<Quarry>();	
+		
+		// ADDING LISTENERS
+		addMouseListener(this);
+		addMouseMotionListener(this);
+		addKeyListener(this);
+		setFocusable(true);
+		
+		// ADDING BACKGROUND IMAGE
+		try {
+			background = ImageIO.read(new File("background.png"));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		// CREATING OBSTACLES
+		for(int i = 0; i < 5; i++){
+			Point obsTempPoint = new Point(r.nextInt(screenWidth), r.nextInt(screenHeight));
+			int type = r.nextInt(3); // TODO TEMPLATE NEED TO CHANGE
+			Obstacle obsTemp = new Obstacle(obsTempPoint, type);
+			obstacles.add(obsTemp);
+		}
+		
+	}
+	
+	//---------- ALL COLLISION TESTS GO HERE -----------
+	public void testCollisions(){
+		// COLLISION FOR OBSTACLES
+		//Rectangle hunt = new Rectangle(hunter.getLocation().x, hunter.getLocation().y, hunter.getWidth(), hunter.getHeight());
+		
+		for(int i = 0; i < obstacles.size(); i++){
+			if(obstacles.get(i).testCollision(hunter)){
+				for(int j = 0; j < 4; j++){
+					hunter.spinCW();
+				}
+				hunter.stopMoving();
+				hunter.move();
+			}
+			
+		}
+		
+		// COLLISION FOR BULLETS AND OBSTACLES
+//		for(int i = 0; i < hunter.bulletList().size(); i++){
+//			for(int j = 0; j < obstacles.size(); j++){
+//				if(hunter.bulletList().get(i).testCollision(obstacles.get(j))){
+//					hunter.bulletList().remove(i);
+//				}
+//			}
+//		}
+		
+		// COLLIDING OBSTACLES
+//		for(int i = 0; i < obstacles.size(); i++){
+//			Random random = new Random();
+//			int rand = random.nextInt(obstacles.size());
+//			if(obstacles.get(i).isCollided(obstacles.get(rand))){
+//				Point p = obstacles.get(i).randomPosition();
+//				obstacles.get(i).setLocation(p.x - 3, p.y - 3);
+//			}
+//		}
+		
+		
+	}
+	
+	// --------- UPDATE / RENDERING / REDRAWING OBJECTS GO HERE
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		//background
+		g.drawImage(background, 0, 0, this);
+		
+		// update hunter
+		hunter.update(g);
+		
+		// update quarries
+		if(!quarries.isEmpty()){
+			for(int i = 0; i < quarries.size(); i++){
+				quarries.get(i).update(g);
+			}
+		}
+		
+		// update obstacles
+		if(!obstacles.isEmpty()){
+			for(int i = 0; i < obstacles.size(); i++){
+				obstacles.get(i).update(g);
+			}
+		}
+		
+		
+	}
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// mouseDragged() – called whenever the mouse is moved while the button is pressed.
+	}
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		Point click = new Point(e.getX(), e.getY());
+		Rectangle north = new Rectangle((int) hunter.getLocation().getX(), (int) hunter.getLocation().getY(), 
+				hunter.getWidth() + screenWidth, hunter.getHeight() + screenHeight);
+		Rectangle south = new Rectangle((int) hunter.getLocation().getX(), (int) hunter.getLocation().getY(), 
+				hunter.getWidth(), hunter.getHeight());
+		Rectangle east = new Rectangle((int) hunter.getLocation().getX(), (int) hunter.getLocation().getY(), 
+				hunter.getWidth(), hunter.getHeight());
+		Rectangle west = new Rectangle((int) hunter.getLocation().getX(), (int) hunter.getLocation().getY(), 
+				hunter.getWidth(), hunter.getHeight());
+		// TODO Auto-generated method stub
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		Point click = new Point(e.getX(), e.getY());
+		System.out.println(click);
+		
+		hunter.setDirection(5);
+		// TODO not finished, can't figure it out
+		// mouseClicked() – called when the mouse is clicked (pressed and released). 
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+	@Override
+	public void mouseExited(MouseEvent e) {}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		// mousePressed() – called when the mouse button is pressed down but not released.
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		// mouseReleased() – called when the mouse button has been released after being pressed.
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		
+		// Special keys
+		// Moves the hunter
+		if(e.getKeyCode() == KeyEvent.VK_ENTER){
+			hunter.toggleMoving();
+		}
+		// Hunter shoots
+		if(e.getKeyCode() == KeyEvent.VK_SPACE){
+			hunter.fireBullet();
+			
+		}
+		
+		// ARROWKEY controls
+		if(e.getKeyCode() == KeyEvent.VK_UP){ // optional: don't need
+			quarries.add(qGen.generateQuarry());
+		}
+		if(e.getKeyCode() == KeyEvent.VK_DOWN){ // optional: don't need
+			System.out.println(hunter.getSpeed());
+		}
+		if(e.getKeyCode() == KeyEvent.VK_LEFT){
+			hunter.spinCCW();
+		}
+		if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+			hunter.spinCW();
+		}
+		
+		// KEYPAD controls, optional
+		if(e.getKeyCode() == KeyEvent.VK_NUMPAD8){
+			
+		}
+		if(e.getKeyCode() == KeyEvent.VK_NUMPAD2){
+			
+		}
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void run() {
+		while(true){
+			//put objects thatll run concurrently / continously
+			
+			// for randomly directing the quarry
+			Random rand = new Random();
+			int rDir = rand.nextInt(8);
+			
+			// move the quarries
+			if(!quarries.isEmpty()){
+				for(int i = 0; i < quarries.size(); i++){
+					
+					quarries.get(i).toggleMoving();
+					//quarries.get(i).setDirection(rDir);
+				
+//					if(quarries.get(i).getLocation().x > width - WIDTH_OFF_SET){
+//						quarries.remove(i);
+//					}
+//					if(quarries.get(i).getLocation().y > height - HEIGHT_OFF_SET){
+//						quarries.remove(i);
+//					}
+//					if(quarries.get(i).getLocation().x < 0){
+//						quarries.remove(i);
+//					}
+//					if(quarries.get(i).getLocation().y < 0){
+//						quarries.remove(i);
+//					}
+//				
+				}
+			}
+			
+			// quarries taking hunter's bullet hits
+			if (!quarries.isEmpty()) {
+				for (int i = 0; i < quarries.size(); i++) {
+					if (hunter.testHit(quarries.get(i))) { // SEE IF HUNTER's, // BULLETS ARE HITTING A, // QUARRY
+						quarries.get(i).takeHit(); // QUARRY TAKES DAMAGE
+						if (quarries.get(i).isDead()) { // IF QUARRIES DIES
+							quarries.get(i).stopMoving();// QUARRY STOP MOVING
+							// NOT SURE HOW TO IMPLEMENT TO WAITING A COUPLE SEC
+							// BEFORE REMOVING IT
+							quarries.remove(i); // REMOVE QUARRY
+						}
+					}
+				}
+			}
+			
+			//obstacle/quarries and bullet collision?
+			testCollisions();
+			
+			repaint();
+			try{
+				Thread.sleep(16);
+			}catch(InterruptedException e){}
+		}
+		// TODO Auto-generated method stub
+		
+	}
+	
+}

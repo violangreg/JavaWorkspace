@@ -1,0 +1,15 @@
+
+public class CoinDenom {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	
+	public boolean next_combinations (int[] array, int k, int maxS)
+	{
+		
+	}
+
+}

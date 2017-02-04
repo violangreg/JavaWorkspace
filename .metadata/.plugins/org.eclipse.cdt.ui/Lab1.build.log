@@ -1,0 +1,11 @@
+14:29:05 **** Rebuild of configuration Debug for project Lab1 ****
+Info: Internal Builder is used for build
+cl /c /EHs /MD /Zi /nologo "/Fosrc\\Lab1.obj" "..\\src\\Lab1.cpp" 
+Cannot run program "cl": Launching failed
+
+Error: Program "cl" not found in PATH
+PATH=[C:/Program Files/Java/jre1.8.0_73/bin/server;C:/Program Files/Java/jre1.8.0_73/bin;C:/Program Files/Java/jre1.8.0_73/lib/amd64;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\Users\Greg\Desktop;]
+
+
+14:29:06 Build Finished (took 1s.299ms)
+

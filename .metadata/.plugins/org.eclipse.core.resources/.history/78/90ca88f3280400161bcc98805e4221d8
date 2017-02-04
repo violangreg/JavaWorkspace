@@ -1,0 +1,39 @@
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class SpriteSheetLoader {
+
+    private BufferedImage spriteSheet;
+   	public SpriteSheetLoader(){
+   	  int width;
+      int height;
+      int rows;
+      int columns;
+      BufferedImage[] sprites = new BufferedImage[rows * columns];
+   	}
+
+    public BufferedImage loadSprite(String file) {
+        BufferedImage sprite = null;
+
+        try {
+            sprite = ImageIO.read(new File(file));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return sprite;
+    }
+
+    public BufferedImage getSprite(int xGrid, int yGrid) {
+
+    	if (spriteSheet == null) {
+            spriteSheet = loadSprite("AnimationSpriteSheet");
+        }
+
+        return spriteSheet.getSubimage(xGrid * TILE_SIZE, yGrid * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+    }
+
+}

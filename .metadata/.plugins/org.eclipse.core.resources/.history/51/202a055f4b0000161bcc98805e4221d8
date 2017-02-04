@@ -1,0 +1,11 @@
+
+public class Obstacle {
+	private int type;
+	public Obstacle(Point p, int t){
+		
+		type = t;
+	}
+	public testCollision(Entity e){
+		
+	}
+}

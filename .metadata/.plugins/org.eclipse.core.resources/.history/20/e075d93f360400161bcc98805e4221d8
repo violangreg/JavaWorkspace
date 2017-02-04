@@ -1,0 +1,102 @@
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+
+
+public class Animation {
+
+    private int fpsCount;                 // Counts ticks for change
+    private int fpsDelay;                 // fps delay 1-12 (You will have to play around with this)
+    private int currentfps;               // animations current fps
+    private int animationDirection;         // animation direction (i.e counting forward or backward)
+    private int totalfpss;                // total amount of fpss for your animation
+
+    private boolean stopped;                // has animations stopped
+
+    private List<fps> fpss = new ArrayList<fps>();    // Arraylist of fpss 
+
+    public Animation(BufferedImage[] fpss, int fpsDelay) {
+        this.fpsDelay = fpsDelay;
+        this.stopped = true;
+
+        for (int i = 0; i < fpss.length; i++) {
+            addfps(fpss[i], fpsDelay);
+        }
+
+        this.fpsCount = 0;
+        this.fpsDelay = fpsDelay;
+        this.currentfps = 0;
+        this.animationDirection = 1;
+        this.totalfpss = this.fpss.size();
+
+    }
+
+    public void start() {
+        if (!stopped) {
+            return;
+        }
+
+        if (fpss.size() == 0) {
+            return;
+        }
+
+        stopped = false;
+    }
+
+    public void stop() {
+        if (fpss.size() == 0) {
+            return;
+        }
+
+        stopped = true;
+    }
+
+    public void restart() {
+        if (fpss.size() == 0) {
+            return;
+        }
+
+        stopped = false;
+        currentfps = 0;
+    }
+
+    public void reset() {
+        this.stopped = true;
+        this.fpsCount = 0;
+        this.currentfps = 0;
+    }
+
+    private void addfps(BufferedImage fps, int duration) {
+        if (duration <= 0) {
+            System.err.println("Invalid duration: " + duration);
+            throw new RuntimeException("Invalid duration: " + duration);
+        }
+
+        fpss.add(new fps(fps, duration));
+        currentfps = 0;
+    }
+
+    public BufferedImage getSprite() {
+        return fpss.get(currentfps).getfps();
+    }
+
+    public void update() {
+        if (!stopped) {
+            fpsCount++;
+
+            if (fpsCount > fpsDelay) {
+                fpsCount = 0;
+                currentfps += animationDirection;
+
+                if (currentfps > totalfpss - 1) {
+                    currentfps = 0;
+                }
+                else if (currentfps < 0) {
+                    currentfps = totalfpss - 1;
+                }
+            }
+        }
+
+    }
+
+}

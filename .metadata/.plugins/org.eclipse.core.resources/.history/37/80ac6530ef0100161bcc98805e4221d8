@@ -1,0 +1,50 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+
+public class Hunter extends Entity{
+	private Bullet bullet;
+	public Hunter(Point p, int w, int h, int hp, int sp){
+		super(p, w, h, hp, sp, 1); // TODO not too sure what direction here again @_@
+	}
+	public void fireBullet(){
+		// TODO
+	}
+	public boolean testHit(Entity e){
+		return true; // TODO
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		g.setColor(Color.WHITE);
+		g.fillOval((int) p.getX() + 50, (int) p.getY() + 50, 10, 10);
+		g.drawLine((int) p.getX() + 50, (int) p.getY() + 50, (int) p.getX() + 55, (int) p.getY() + 55);
+		
+		switch(dir){
+		case 1:
+			// north
+			
+			break;
+		case 2:
+			// north-east
+			break;
+		case 3:
+			// east
+			break;
+		case 4:
+			// south-east
+			break;
+		case 5:
+			// south
+			break;
+		case 6:
+			// south-west
+			break;
+		case 7:
+			// west
+			break;
+		case 8:
+			// north-west
+			break;
+		}
+	}
+}

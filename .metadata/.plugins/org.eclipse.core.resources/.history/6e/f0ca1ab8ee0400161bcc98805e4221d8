@@ -1,0 +1,24 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+
+import javax.imageio.ImageIO;
+
+
+public class Bullet extends Entity{
+	public Bullet(Point p, int w, int h, int hp, int sp, int dir){
+		super(p, w, h, hp, sp, dir);
+		BufferedImage image = ImageIO.read(new File("bullet0.png"));
+	}
+	public boolean testCollision(Entity e){		
+		return getBounds().intersects(e.getBounds()); // TODO not too sure if this is right
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		g.setColor(Color.YELLOW);
+		g.fillOval((int)p.getX() , (int)p.getY(), 10, 10);
+		g.drawImage(image, (int)p.getX() , (int)p.getY(), null);
+		// TODO Auto-generated method stub
+	}
+}

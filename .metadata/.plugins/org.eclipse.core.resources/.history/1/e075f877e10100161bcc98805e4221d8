@@ -1,0 +1,67 @@
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+
+public abstract class Entity {
+	private Rectangle location;
+	private int HP, speed, direction;
+	private boolean moving;
+	public Entity(Point p, int w, int h, int hp, int sp, int dir){
+		location = new Rectangle(w, h);
+		location.add(p);
+		HP = hp;
+		speed = sp;
+		direction = dir;
+	}
+	public Point getLocation(){
+		return location.getLocation();
+	}
+	public int getWidth(){
+		return location.width;
+	}
+	public int getHeight(){
+		return location.height;
+	}
+	public int getHp(){
+		return HP;
+	}
+	public int getSpeed(){
+		return speed;
+	}
+	public int getDirection(){
+		return direction;
+	}
+	public boolean isDead(){
+		if(HP <= 0) return true;
+		else return false;
+	}
+	public void takeHit(){
+		
+	}
+	public void spinCW(){
+		switch(direction){
+		
+		}
+	}
+	public void spinCCW(){
+		
+	}
+	public void setDirection(int d){
+		direction = d;
+	}
+	public void toggleMoving(){
+		moving = true;
+	}
+	public void stopMoving(){
+		moving = false;
+	}
+	public void update(){
+		
+	}
+	public void move(){
+		if(speed > 0){
+			
+		}
+	}
+	public abstract void draw(Graphics g, Point p, int w, int h, int dir);
+}

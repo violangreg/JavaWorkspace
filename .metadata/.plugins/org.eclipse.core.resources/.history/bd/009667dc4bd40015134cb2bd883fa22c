@@ -1,0 +1,11 @@
+import java.util.ArrayList;
+
+public class ItemGenerator {
+	public ItemGenerator(){
+		
+	}
+	public Item generateItem(){
+		return null;
+	}
+	private ArrayList<Item> itemList = new ArrayList<Item>();
+}

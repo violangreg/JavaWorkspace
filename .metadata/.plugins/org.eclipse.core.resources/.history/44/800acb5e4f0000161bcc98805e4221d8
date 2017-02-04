@@ -1,0 +1,10 @@
+
+public class Frame {
+	private Panel panel;
+	public Frame(){
+		panel = new Panel(); // TODO not sure about this
+	}
+	public static void main extends JFrame(String[] args){
+		// TODO 
+	}
+}

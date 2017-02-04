@@ -1,0 +1,46 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+
+public class Bullet extends Entity{
+	public Bullet(Point p, int w, int h, int hp, int sp, int dir){
+		super(p, w, h, hp, sp, dir);
+	}
+	public boolean testCollision(Entity e){
+		return getLocation().equals(e.getLocation()); // TODO not too sure if this is right
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		g.setColor(Color.WHITE);
+		g.fillRect((int)p.getX(), (int)p.getY(), 5, 5);
+		
+		switch(dir){
+		case 1: // north 
+			p.translate(0, -1); // y - is up, x is the same
+			break;
+		case 2: // north-east
+			p.translate(1, -1); // y + is down
+			break;
+		case 3: // east
+			p.translate(1, 0);
+			break;
+		case 4: // south-east
+			p.translate(1, 1);
+			break;
+		case 5: // south
+			location.translate(0, 1);
+			break;
+		case 6: // south-west
+			location.translate(-1, 1);
+			break;
+		case 7: // west
+			location.translate(-1, 0);
+			break;
+		case 8: // north-west
+			location.translate(-1, -1);
+			break;
+		}
+		
+		// TODO Auto-generated method stub
+	}
+}

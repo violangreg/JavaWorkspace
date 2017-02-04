@@ -1,0 +1,15 @@
+import java.util.ArrayList;
+
+public class QuarryGenerator {
+	ArrayList<Quarry> quarry;
+	public QuarryGenerator(){
+		quarry = new ArrayList<Quarry>(); // TODO not finished
+	}
+	public Quarry generateQuarry(){
+		
+		
+		
+		Quarry quarry = new Quarry()
+		return null; // TODO
+	}
+}

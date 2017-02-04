@@ -1,0 +1,25 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+
+public class Obstacle extends Entity{
+	private int type;
+	private BufferedImage image;
+	public Obstacle(Point p, int t, BufferedImage i){
+		super(p, 60, 60, 1, 1, 1); // TODO NO IDEA WHAT OBSTACLE IS LOL
+		type = t;
+		image = i;
+		Point randPos = randomPosition();
+		setLocation(randPos.x, randPos.y);
+	}
+	public boolean testCollision(Entity e){
+		return getBounds().contains(e.getBounds());
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		
+		g.drawImage(image, (int)p.getX(), (int)p.getY(), null);
+		g.drawRect((int)p.getX(), (int)p.getY(), w, h);
+	}
+}

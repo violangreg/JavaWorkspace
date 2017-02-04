@@ -1,0 +1,41 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
+public class Bullet extends Entity{
+	private BufferedImage image;
+	public Bullet(Point p, int w, int h, int hp, int sp, int dir){
+		super(p, w, h, hp, sp, dir);
+		try {
+			image = ImageIO.read(new File("bullet2.png"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public boolean testCollision(Entity e){		
+		boolean hit = false;
+		if(this.getLocation() == e.getLocation()){
+			hit = true;
+		}
+		if(this.getHeight() == e.getHeight()){
+			hit = true;
+		}
+		if(this.getWidth() == e.getWidth()){
+			hit = true;
+		}
+		return hit; // TODO not too sure if this is right
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		//g.setColor(Color.YELLOW);
+		//g.fillOval((int)p.getX() , (int)p.getY(), 10, 10);
+		g.drawImage(image, (int)p.getX() , (int)p.getY(), null);
+		// TODO Auto-generated method stub
+	}
+}

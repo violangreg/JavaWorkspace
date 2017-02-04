@@ -1,0 +1,7 @@
+import java.awt.Point;
+
+public class Bullet extends Entity{
+	public Bullet(Point p, int w, int h, int hp, int sp, int dir){
+		super(p, w, h, h, hp, sp, dir);
+	}
+}

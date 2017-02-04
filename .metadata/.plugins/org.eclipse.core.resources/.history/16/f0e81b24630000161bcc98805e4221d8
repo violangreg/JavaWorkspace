@@ -1,0 +1,82 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.util.ArrayList;
+import javax.swing.JPanel;
+
+public class Panel extends JPanel implements KeyListener, MouseListener, MouseMotionListener{
+	private Hunter hunter;
+	private QuarryGenerator qGen;
+	ArrayList<Obstacle> obstacles;
+	ArrayList<Quarry> quarries;
+	public Panel(){
+		this.setBackground(Color.WHITE);
+		hunter = new Hunter(new Point(5,5), 1, 1, 1, 1); // TODO this is just a template
+		qGen = new QuarryGenerator();
+		obstacles = new ArrayList<Obstacle>();
+		quarries = new ArrayList<Quarry>();
+	}
+	public void testCollisions(){
+		
+	}
+	public void paintComponent(Graphics g){
+		super.paintComponent(g);
+		g.drawLine(20, 42, 75, 75);
+	}
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}

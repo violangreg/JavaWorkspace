@@ -1,0 +1,19 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+
+public class Obstacle extends Entity{
+	private int type;
+	public Obstacle(Point p, int t){
+		super(p, 1, 1, 1, 1, 1); // TODO NO IDEA WHAT OBSTACLE IS LOL
+		type = t;
+	}
+	public boolean testCollision(Entity e){
+		return getBounds().contains(e.getBounds());
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		g.setColor(Color.GREEN);
+		g.fillRect((int)p.getX(), (int)p.getY(), w, h);
+	}
+}

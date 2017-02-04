@@ -1,0 +1,20 @@
+import java.awt.Point;
+
+public class Level {
+	public Level(){
+		
+	}
+	public void generateLevel(int levelNum){
+		
+	}
+	public char getRoom(Point p){
+		return 0;
+	}
+	public void displayMap(Point p){
+		
+	}
+	public Point findStartLocation(){
+		return null;
+	}
+	private char[][] level;
+}

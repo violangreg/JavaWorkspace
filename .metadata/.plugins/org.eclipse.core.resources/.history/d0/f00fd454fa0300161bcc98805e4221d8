@@ -1,0 +1,144 @@
+import java.awt.Graphics;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.util.Random;
+
+public abstract class Entity {
+	private Rectangle location;
+	private int HP, speed, direction;
+	private boolean moving;
+	public Entity(Point p, int w, int h, int hp, int sp, int dir){
+		location = new Rectangle(w, h);
+		location.add(p);
+		HP = hp;
+		speed = sp;
+		direction = dir;
+	}
+	public Point getLocation(){
+		return location.getLocation();
+	}
+	public Point randomPosition(){
+		// random position
+		Random rand = new Random();
+		int x = rand.nextInt(666) + 10;
+		int y = rand.nextInt(343) + 10;
+		Point p = new Point(x,y);
+		
+		return p;
+	}
+	public void setLocation(int x, int y){
+		location.setLocation(x, y);
+	}
+	public int getWidth(){
+		return (int) location.getWidth();
+	}
+	public void setWidth(int w){
+		location.width = w;
+	}
+	public int getHeight(){
+		return (int) location.getHeight();
+	}
+	public void setHeight(int h){
+		location.height = h;
+	}
+	public int getHp(){
+		return HP;
+	}
+	public int getSpeed(){
+		return speed;
+	}
+	public int getDirection(){
+		return direction;
+	}
+	public boolean getMove(){
+		return moving;
+	}
+	public boolean isDead(){
+		if(HP <= 0) return true;
+		else return false;
+	}
+	public void takeHit(){
+		HP -= 5; // TODO template
+	}
+	public void spinCW(){
+		if(direction == 8){
+			direction = 1;
+		}
+		else{
+			++direction;
+		}
+	}
+	public void spinCCW(){
+		if(direction == 1){
+			direction = 8;
+		}
+		else{
+			--direction;
+		}
+	}
+	public void setDirection(int d){
+		direction = d;
+	}
+	public void toggleMoving(){
+		if(moving == true){
+			moving = false;
+		}
+		else{
+			moving = true;
+		}
+	}
+	public void stopMoving(){
+		moving = false;
+	}
+	public void update(Graphics g){
+		// renders the object
+		draw(g, getLocation(), getWidth(), getHeight(), getDirection());
+		
+		// if is able can move
+		if(moving == true){
+			move();
+		}
+		
+		// max x = 676 ,  max y = 353
+		if(this.location.x > 660 || this.location.y > 340){
+			location.setLocation(location.x - 3, location.y);
+			stopMoving();
+		}
+		if(this.location.y > 340){
+			location.setLocation(location.x, location.y - 3);
+			stopMoving();
+		}
+		if(this.location.x < 1 || this.location.y < 1){
+			stopMoving();
+		}
+	}
+	public void move(){
+		switch(direction){
+		case 1: // north 
+			location.translate(0, -1 * speed); // y - is up, x is the same
+			break;
+		case 2: // north-east
+			location.translate(1 * speed, -1 * speed); // y + is down
+			break;
+		case 3: // east
+			location.translate(1 * speed, 0);
+			break;
+		case 4: // south-east
+			location.translate(1 * speed, 1 * speed);
+			break;
+		case 5: // south
+			location.translate(0, 1 * speed);
+			break;
+		case 6: // south-west
+			location.translate(-1 * speed, 1 * speed);
+			break;
+		case 7: // west
+			location.translate(-1 * speed, 0);
+			break;
+		case 8: // north-west
+			location.translate(-1 * speed, -1 * speed);
+			break;
+		}
+	}
+	public abstract void draw(Graphics g, Point p, int w, int h, int dir);
+}

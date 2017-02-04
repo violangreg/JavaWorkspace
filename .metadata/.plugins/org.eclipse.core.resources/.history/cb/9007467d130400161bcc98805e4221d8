@@ -1,0 +1,34 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+import java.util.Random;
+
+public class Quarry extends Entity {
+	private int weight;
+	private String name;
+	public Quarry(Point p, int w, int h, int hp, int sp, String n, int wt){
+		super(p, w, h, hp, sp, 1); // TODO not sure if dir is right
+		name = n;
+		weight = wt;
+	}
+	public String getName(){
+		return name;
+	}
+	public int getWeight(){
+		return weight;
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+//		Random rand = new Random();
+//		float r = (float) (rand.nextFloat());
+//		float q = (float) (rand.nextFloat());
+//		float b = (float) (rand.nextFloat());
+//		Color randColor = new Color(r, q, b);
+//		randColor.brighter();
+//		
+//		g.setColor(randColor);
+		g.setColor(Color.RED);
+		
+		g.fillOval((int) p.getX(), (int) p.getY(), w, h);
+	}
+}

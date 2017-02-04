@@ -1,0 +1,20 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+
+public class Bullet extends Entity{
+	public Bullet(Point p, int w, int h, int hp, int sp, int dir){
+		super(p, w, h, hp, sp, dir);
+	}
+	public boolean testCollision(Entity e){
+		System.out.println("hit");
+		return getBounds().contains(e.getBounds()); // TODO not too sure if this is right
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		g.setColor(Color.YELLOW);
+		g.fillRect((int)p.getX() , (int)p.getY(), 5, 5);
+		
+		// TODO Auto-generated method stub
+	}
+}

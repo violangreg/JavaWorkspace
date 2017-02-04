@@ -1,0 +1,22 @@
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Point;
+
+public class Hunter extends Entity{
+	private Bullet bullet;
+	public Hunter(Point p, int w, int h, int hp, int sp){
+		super(p, w, h, hp, sp, 1); // TODO not too sure what direction here again @_@
+	}
+	public void fireBullet(){
+		// TODO
+	}
+	public boolean testHit(Entity e){
+		return true; // TODO
+	}
+	@Override
+	public void draw(Graphics g, Point p, int w, int h, int dir) {
+		g.setColor(Color.WHITE);
+		g.fillOval((int) p.getX(), (int) p.getY(), 10, 10);
+		g.drawLine(50, 50, 55, 55);
+	}
+}
