@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;Lab3_minh&apos; to &apos;Lab3_&apos;&#x0D;&#x0A;- Original project: &apos;Lab3&apos;&#x0D;&#x0A;- Original element: &apos;Lab3_minh&apos;&#x0D;&#x0A;- Renamed element: &apos;Lab3_&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;Lab3_minh&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;{Lab3_minh.java[Lab3_minh" matchStrategy="1" name="Lab3_" qualified="false" references="true" similarDeclarations="false" stamp="1507524479731" textual="false" version="1.0"/>
+</session>

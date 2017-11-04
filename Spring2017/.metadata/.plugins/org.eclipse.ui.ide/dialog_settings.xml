@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <section name="Workbench">
+	<list key="org.eclipse.ui.internal.wizards.datatransfer.SmartImportRootWizardPage.knownSources">
+		<item value="C:\Users\Greg\Documents\GitHub\JavaWorkspace\Spring2017\algs4"/>
+		<item value="C:\Users\Greg\Documents\GitHub\JavaWorkspace\Spring2017\algs4\8-puzzle"/>
+		<item value="C:\Users\Greg\Documents\GitHub\JavaWorkspace\Spring2017\8-puzzle-problem"/>
+	</list>
+	<section name="ExternalProjectImportWizard">
+	</section>
 	<section name="WORKBENCH_SETTINGS">
 		<list key="ENABLED_TRANSFERS">
 		</list>

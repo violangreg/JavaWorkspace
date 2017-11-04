@@ -1,0 +1,152 @@
+import java.io.*;
+import java.util.*;
+
+public class Lab3 {
+	private static Map grammar_hmap = new HashMap<String, ArrayList<ArrayList<String>>>();
+	//private static String non_terminal_list[];
+	private static List non_terminal_list = new ArrayList<String>();
+	
+	public static void main(String[] args) throws FileNotFoundException{	
+		//scan file
+		File file = new File("cfg.txt");
+		Scanner file_scanner = new Scanner(file);
+		
+		// grab the nonterminals
+		String non_terminals = file_scanner.nextLine();
+		String nt[] = non_terminals.split("\\s+");
+		for(int i = 0; i < nt.length; i++)
+			non_terminal_list.add(nt[i]);
+		
+		//scan each line
+		String previous_line = null;
+		while(file_scanner.hasNextLine()){
+			ArrayList<String> grammar_list = new ArrayList<String>();
+			String line[] = file_scanner.nextLine().split("\\s+");
+			
+			//getting just the production rule, omit everything before/and arrow
+			String production_rule[] = new String[line.length-2]; 
+			for(int i = 0; i < line.length-2; i++)
+				production_rule[i] = line[i+2];
+			for(String s : production_rule)
+				grammar_list.add(s);
+			
+			//replacing blank with eps
+			if(production_rule.length == 0)
+				grammar_list.add("eps");
+			
+			//if line is same as previous line, grab the array list and nest the new grammar_list
+			if(line[0].equals(null));
+			else if(line[0].equals(previous_line)){ 
+				ArrayList<ArrayList<String>> grammar_list_nest = (ArrayList<ArrayList<String>>) grammar_hmap.get(line[0]);
+				grammar_list_nest.add(grammar_list);
+				grammar_hmap.put(line[0], grammar_list_nest);
+			}
+			else{
+				ArrayList<ArrayList<String>> temp_nest = new ArrayList<ArrayList<String>>();
+				temp_nest.add(grammar_list);
+				grammar_hmap.put(line[0], temp_nest);
+			}
+			
+			//save previous line
+			previous_line = line[0];
+		}
+		
+		// find all the first sets
+//		for(int i = 0; i < non_terminal_list.size(); i++){
+//			System.out.println(non_terminal_list.get(i).toString() + " -> " + 
+//		FindFirstSet(non_terminal_list.get(i).toString()));
+//		}
+		//System.out.println(grammar_hmap); //debug print
+		
+		for(int i = 0; i < non_terminal_list.size(); i++){
+			System.out.println(FindFollowSet(non_terminal_list.get(i).toString()));
+		}
+	}
+	
+	//find follow set
+	private static ArrayList<String> FindFollowSet(String key){
+		ArrayList<String> follow_set = new ArrayList<String>();
+		
+		for(int i = 0; i < non_terminal_list.size(); i++){
+			ArrayList<ArrayList<String>> temp_list_nest = (ArrayList<ArrayList<String>>) grammar_hmap.get(non_terminal_list.get(i));
+			ArrayList<ArrayList<String>> key_list = (ArrayList<ArrayList<String>>) grammar_hmap.get(key);
+					
+			//in nested arraylist
+			for(int k = 0; k < temp_list_nest.size(); k++){
+				ArrayList<String> temp_list = temp_list_nest.get(k);
+				
+				//in arraylist
+				for(int j = 0; j < temp_list.size(); j++){
+					//find the key inside all the arraylists
+					if(temp_list.get(j).equals(key)){
+						
+						//1
+						//just grabs whats after the key: follow(key)
+						if(j < temp_list.size()-1){
+							if(non_terminal_list.contains(temp_list.get(j+1))) //non-terminal
+								follow_set.addAll(FindFirstSet(temp_list.get(j+1)));
+							else //terminal
+								follow_set.add(temp_list.get(j+1));
+						}else {
+							//System.out.print("overflow");
+						}
+						
+						//2
+						//follow(A) subsset of follows(C)
+//						if(temp_list.contains(key) && temp_list.size() < 1){
+//							ArrayList<String> A_follow_set = FindFollowSet(non_terminal_list.get(i).toString());
+//							follow_set.addAll(A_follow_set);
+//						}
+						
+						if(non_terminal_list.contains(temp_list.get(1)) && temp_list.size() < 2){
+							if(temp_list.get(1).equals(key)){
+								ArrayList<String> A_follow_set = FindFollowSet(non_terminal_list.get(i).toString());
+								follow_set.addAll(A_follow_set);
+							}
+						}
+						
+						
+						//3
+						//notes: if stmt is contained in this array and is the first prod only if C goes to eps
+						//soooo stmt_list follows stmt
+						
+						if(non_terminal_list.contains(temp_list.get(1)) && temp_list.size() < 2){
+							if(FindFirstSet(temp_list.get(1)).contains("eps")){
+								if(temp_list.get(0).equals(key)){
+									ArrayList<String> A_follow_set = FindFollowSet(non_terminal_list.get(i).toString());
+									follow_set.addAll(A_follow_set);
+								}
+							}	
+						}
+						
+						
+					}//if statement for finding key inside all the arraylists
+				}//for loop for in arraylist
+			}//for loop for in nested arraylist
+	
+		}
+		
+		return follow_set;
+	}
+	
+	//find first set
+	private static ArrayList<String> FindFirstSet(String key){
+		ArrayList<String> first_set = new ArrayList<String>();
+		ArrayList<ArrayList<String>> temp_list_nest = (ArrayList<ArrayList<String>>) grammar_hmap.get(key);
+		
+		for(int i = 0; i < temp_list_nest.size(); i++){ //go thru all the arraylists in the nest
+			//get all the first production on the arraylists
+			String first_prod = temp_list_nest.get(i).get(0);
+			//go thru all the non_terminals and check if the first product is not a non_terminal
+			if(!non_terminal_list.contains(first_prod))
+				first_set.add(first_prod);
+			else{
+				//if it is, find the first set of it (recursion)
+				ArrayList<String> temp_list = FindFirstSet(first_prod);
+				first_set.addAll(temp_list);
+			}
+		}
+		return first_set;
+	}
+	
+}

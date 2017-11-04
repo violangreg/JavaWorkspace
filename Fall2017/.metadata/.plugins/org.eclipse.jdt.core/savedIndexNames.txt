@@ -1,0 +1,10 @@
+INDEX VERSION 1.129+C:\Users\Greg\Documents\GitHub\JavaWorkspace\Fall2017\.metadata\.plugins\org.eclipse.jdt.core
+3705611006.index
+2410150673.index
+2819288629.index
+996610041.index
+1281376111.index
+1259207542.index
+1305583991.index
+2050128087.index
+1007340512.index

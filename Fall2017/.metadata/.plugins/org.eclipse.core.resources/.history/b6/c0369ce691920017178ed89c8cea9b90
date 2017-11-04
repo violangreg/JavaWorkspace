@@ -1,0 +1,33 @@
+//----------------------------------------------//
+// Greg Paolo Violan, 011706641                 //
+// CECS 424 Sec 01                              //
+// Date: 09-05-17                               //
+// Homework 1: Financial quantities             //
+//----------------------------------------------//
+import java.io.*;
+import java.util.*;
+
+public class HW1 {
+	public static void main(String[] args) throws FileNotFoundException
+	{
+		// regular expression for dollars currency
+		String regex = "^\\$([*]*)(([1-9]\\d{0,2}(,\\d{3})*)|(([1-9]\\d*)?\\d))(\\.\\d\\d)?$";
+		
+		File file = new File(args[0]);
+		
+		// Take in file and 
+		Scanner file_scnr = new Scanner(file);
+		while(file_scnr.hasNextLine())
+		{
+			String input = file_scnr.nextLine();
+			
+			boolean match = input.matches(regex);
+			if(match)
+				System.out.println("Matched: " + input);
+			else
+				System.out.println("Not Matched: " + input);
+		}
+		
+		file_scnr.close();
+	}
+}

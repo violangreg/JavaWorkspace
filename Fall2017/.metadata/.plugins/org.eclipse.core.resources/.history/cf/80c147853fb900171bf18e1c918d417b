@@ -1,0 +1,167 @@
+//Greg Paolo Violan, 011706641
+//CECS424, Sec 01
+//10-24-17
+/*
+Commit your file into the SVN (Not BeachBoard)
+*/
+import java.util.*;
+
+public class Lab7 {	
+	/*
+	1. Write a program that takes as input an integer number and swaps the bits at indices 'i' and 'j'. (10 pts)
+	You should use bit wise operations to perform the task.
+	Do not use int -> String -> swap -> int.
+	ex) if x = 73 (0100 1001), i = 1, j = 6, then the output is 11 (0000 1011)
+	*/
+	public static int swapBits(int x, int i, int j) {
+		int bit1 = (x >> i) & 1; // get the bit of ith position
+		int bit2 = (x >> j) & 1; // get the bit of jth position
+		if(bit1 == bit2) return x; // if both bits are the same just dont do anything
+		int mask = (1 << i) | (1 << j); // make a mask in those positions for exclusive or '^'
+		// mask = 01 + 0000 0010 = 0100 0010; the inclusive or '|' operator does binary appending.
+		return x ^ mask; // xor int x and the mask which will swap those bits -> 0100 1001 ^ 0100 0010 = 0000 1011
+		// source:https://stackoverflow.com/questions/15928545/how-can-i-swap-two-bits-of-integer-in-java
+	}
+
+	/*
+	2. Write a program that performs base conversion. (10 pts)
+	The string 's' represents be an integer in base 'b1'.
+	The output should be an integer in base b2. Assume 2 <= b1,b2 <= 16.
+	ex) if s = 615, b1 = 7, and b2 = 13, then the output is 1A7.
+	*/
+	public static String convertBase(String s, int b1, int b2) {
+		return Integer.toString(Integer.parseInt(s, b1), b2).toUpperCase(); // convert string to int with radix 7 "615" -> 306 then
+		// convert that to radix 13 as a String.toUpperCase();
+		// source: https://stackoverflow.com/questions/15735079/convert-from-one-base-to-another-in-java
+		// note: doesn't work when radix is either smaller than Character.MIN_RADIX or larger than Character.MAX_RADIX
+		//return baseToBase(s, b1, b2);
+	}
+	
+	public static String baseToBase(String num, int base1, int base2) {
+	    int no = convFrmBaseToDeci(num, base1);
+	    return convFrmDecToBase(no, base2);
+	}
+
+	public static String convFrmDecToBase(int num, int base) {
+	    String res = "";
+	    int rem;
+	    // Convert input number is given base by repeatedly
+	    // dividing it by base and taking remainder
+	    while (num > 0) {
+	        rem = num % base;
+	        if (base > 10) {
+	            if (rem == 10)
+	                res += 'A';
+	            else if (rem == 11)
+	                res += 'B';
+	            else if (rem == 12)
+	                res += 'C';
+	            else if (rem == 13)
+	                res += 'D';
+	            else if (rem == 14)
+	                res += 'E';
+	            else if (rem == 15)
+	                res += 'F';
+	            else
+	                res += rem;
+	        } else
+	            res += rem;
+
+	        num /= base;
+	    }
+	    // Reverse the result as it needs to be reversed order
+	    return new StringBuffer(res).reverse().toString();
+	}
+
+	public static int convFrmBaseToDeci(String num, int base) {
+
+	    if (base < 2 || (base > 10 && base != 16))
+	        return -1;
+
+	    int val = 0;
+	    int power = 1;
+
+	    for (int i = num.length() - 1; i >= 0; i--) {
+	        int digit = digitToVal(num.charAt(i));
+
+	        if (digit < 0 || digit >= base)
+	            return -1;
+
+	        // Decimal equivalent is str[len-1]*1 +
+	        // str[len-1]*base + str[len-1]*(base^2) + ...
+	        val += digit * 	power;
+	        power = power * base;
+	    }
+	    return val;
+	}
+
+	public static int digitToVal(char c) {
+	    if (c >= '0' && c <= '9')
+	        return (int) c - '0';
+	    else
+	        return (int) c - 'A' + 10;
+	}
+
+
+	/*
+	3. Write a program to perform Run-length encoding (RLE) compression. (10 pts)
+	This is using the counts of repeated characters.
+	ex) if s = aabcccccaaa, then the output is a2b1c5a3.
+	Assume the string has only uppercase and lowercase letters (A|...|Z|a|...|z)
+	*/
+	public static String decoding(String s) {
+		String decode = ""; // decode string holder
+		char[] char_arr = s.toCharArray(); // split the string to chars array
+		for(int i = 0; i < char_arr.length; i++){
+			int count = 1;
+			while(char_arr[i] == char_arr[i+1]){ //check if the next char is the same as current char
+				count++; // increase the count if it is
+				i++; // check the next position
+				if(i == char_arr.length-1) break; // break when we get to the last char to avoid OutOfBounds throw
+			}
+			decode += char_arr[i] + Integer.toString(count); // append char and the count
+		}
+		return decode;
+		//source: http://www.techiedelight.com/run-length-encoding-rle-data-compression-algorithm/
+	}
+
+	/*
+	4. (Extra) Write a encoder of RLE compression. (10 pts)
+	ex) if s = a2b1c5a3, then the output is aabcccccaaa.
+	Assume the string has only uppercase and lowercase letters (A|...|Z|a|...|z)
+	*/
+	public static String encoding(String s) {
+		StringBuilder encode = new StringBuilder(); // use to append the characters 
+		char[] char_arr = s.toCharArray(); // split the string to chars array
+		for(int i = 0; i < s.length(); i++){
+			// reintialize variables each loop
+			StringBuilder sb = new StringBuilder(); // use to append the count of integer
+			int placement = 1; // keeps track of the shifted placement used later
+			int count = 0; // used to find the count of the decode
+			if(!Character.isLetter(char_arr[i])){ // skip letters, just care about numbers
+				while(Character.isDigit(char_arr[i])){ // if we get a number, append that
+					//to sb and keep checking if the next char is a number
+					sb.append(Character.toString(char_arr[i]));
+					placement++; // keep track of how many placements we moved
+					i++; // move to the next char
+					if(i == char_arr.length) break; // break to avoid OutOfBounds throw
+				}
+				count = Integer.parseInt(sb.toString()); // convert appended number to an integer count
+				for(int j = 0; j < count; j++){ // append the letter by subtracting the current ith
+					// by the placement -> this will give us the letter of this count. 
+					encode.append(char_arr[i-placement]);
+				}
+			}
+		}
+		return encode.toString(); // return as string
+		//source: mine :)
+	}
+
+	public static void main(String[] args) {
+		System.out.println("I won't change the class name, and I will commit this file into the SVN.");
+		System.out.println(swapBits(73, 1, 6));
+		System.out.println(convertBase("615", 7, 4));
+		System.out.println(decoding("aabcccccaaa"));
+		System.out.println(encoding("a2b10c5a3"));
+	}
+}
