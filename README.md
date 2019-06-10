@@ -1,5 +1,5 @@
 # JavaWorkspace
-Java projects from my CS classes
+Java projects
 
 ### Spring2016 Folder, CECS274 - Java Games
 Created various programs using the concept of OOP in Java.
